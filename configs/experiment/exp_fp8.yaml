@@ -1,0 +1,8 @@
+name: fp8_kv_chunked
+quant:
+  mode: online
+  method: fp8
+kvcache:
+  kv_cache_dtype: fp8_e4m3
+scheduling:
+  max_num_batched_tokens: 8192
