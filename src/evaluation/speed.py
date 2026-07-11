@@ -1,8 +1,8 @@
 from statistics import mean
 
-from thua.evaluation.base import Evaluator
-from thua.metrics.latency import compute_timing
-from thua.metrics.scoring import ScoringConfig, request_score, ers
+from evaluation.base import Evaluator
+from metrics.latency import compute_timing
+from metrics.scoring import ScoringConfig, request_score, ers
 
 
 class SpeedEvaluator(Evaluator):

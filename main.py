@@ -5,9 +5,9 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 
-from thua.config.loader import load_experiment
-from thua.evaluation.report import format_speed_report
-from thua.runner import run_speed, gen_compose
+from config.loader import load_experiment
+from evaluation.report import format_speed_report
+from runner import run_speed, gen_compose
 
 
 def _parse():

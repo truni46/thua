@@ -1,5 +1,5 @@
 import math
-from thua.metrics.scoring import ScoringConfig, s_ttft, s_tpot, request_score, ers
+from metrics.scoring import ScoringConfig, s_ttft, s_tpot, request_score, ers
 
 CFG = ScoringConfig()
 

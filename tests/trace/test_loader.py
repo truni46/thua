@@ -1,5 +1,5 @@
 from pathlib import Path
-from thua.trace.loader import load_trace, Request
+from trace.loader import load_trace, Request
 
 FIXT = Path(__file__).parent / "fixtures" / "mini_trace.jsonl"
 

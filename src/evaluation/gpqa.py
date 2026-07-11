@@ -1,6 +1,6 @@
 import re
 
-from thua.metrics.accuracy import delta
+from metrics.accuracy import delta
 
 _TMPL = (
     "Answer the following multiple choice question. "

@@ -1,5 +1,5 @@
-from thua.config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
-from thua.serve.base import ServeBackend
+from config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
+from serve.base import ServeBackend
 
 ENTRYPOINT = ["python3", "-m", "vllm.entrypoints.openai.api_server"]
 

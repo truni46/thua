@@ -1,5 +1,5 @@
-from thua.config.loader import load_experiment
-from thua.runner import gen_compose
+from config.loader import load_experiment
+from runner import gen_compose
 
 
 def _cfg(tmp_path):

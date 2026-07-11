@@ -1,9 +1,9 @@
 import pytest
-from thua.trace.loader import Request
-from thua.trace.client import StreamResult
-from thua.trace.replayer import Replayer
-from thua.metrics.scoring import ScoringConfig
-from thua.evaluation.speed import SpeedEvaluator
+from trace.loader import Request
+from trace.client import StreamResult
+from trace.replayer import Replayer
+from metrics.scoring import ScoringConfig
+from evaluation.speed import SpeedEvaluator
 
 
 class FakeClient:

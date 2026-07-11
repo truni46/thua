@@ -1,5 +1,5 @@
 import math
-from thua.metrics.latency import compute_timing, RequestTiming
+from metrics.latency import compute_timing, RequestTiming
 
 
 def test_ttft_is_first_token_time():

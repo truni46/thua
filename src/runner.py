@@ -1,11 +1,11 @@
-from thua.config.schema import ExperimentConfig
-from thua.evaluation.speed import SpeedEvaluator
-from thua.metrics.scoring import ScoringConfig
-from thua.serve.compose import to_compose_yaml
-from thua.serve.registry import get_backend
-from thua.trace.client import StreamingClient
-from thua.trace.loader import load_trace
-from thua.trace.replayer import Replayer
+from config.schema import ExperimentConfig
+from evaluation.speed import SpeedEvaluator
+from metrics.scoring import ScoringConfig
+from serve.compose import to_compose_yaml
+from serve.registry import get_backend
+from trace.client import StreamingClient
+from trace.loader import load_trace
+from trace.replayer import Replayer
 
 
 async def run_speed(cfg: ExperimentConfig) -> dict:

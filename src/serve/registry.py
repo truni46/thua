@@ -1,6 +1,6 @@
-from thua.config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
-from thua.serve.base import ServeBackend
-from thua.serve.vllm import VllmBackend
+from config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
+from serve.base import ServeBackend
+from serve.vllm import VllmBackend
 
 _BACKENDS = {"vllm": VllmBackend}
 

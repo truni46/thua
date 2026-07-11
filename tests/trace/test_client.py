@@ -1,7 +1,7 @@
 import json
 import httpx
 import pytest
-from thua.trace.client import StreamingClient, StreamResult
+from trace.client import StreamingClient, StreamResult
 
 
 def _sse(chunks: list[str]) -> bytes:

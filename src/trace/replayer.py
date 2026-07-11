@@ -2,8 +2,8 @@ import asyncio
 import time
 from dataclasses import dataclass
 
-from thua.trace.client import StreamResult
-from thua.trace.loader import Request
+from trace.client import StreamResult
+from trace.loader import Request
 
 
 @dataclass

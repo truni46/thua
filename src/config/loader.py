@@ -1,7 +1,7 @@
 import copy
 import yaml
 
-from thua.config.schema import (
+from config.schema import (
     ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig,
     BenchmarkConfig, AccuracyConfig, ExperimentConfig,
 )

@@ -1,4 +1,4 @@
-from thua.config.loader import deep_merge, load_experiment
+from config.loader import deep_merge, load_experiment
 
 
 def test_deep_merge_overrides_nested():

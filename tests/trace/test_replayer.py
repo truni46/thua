@@ -1,7 +1,7 @@
 import pytest
-from thua.trace.loader import Request
-from thua.trace.client import StreamResult
-from thua.trace.replayer import Replayer, ReplayItem
+from trace.loader import Request
+from trace.client import StreamResult
+from trace.replayer import Replayer, ReplayItem
 
 
 class FakeClient:

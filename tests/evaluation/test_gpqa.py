@@ -1,6 +1,6 @@
 import random
 import pytest
-from thua.evaluation.gpqa import GpqaEvaluator, extract_answer, format_question
+from evaluation.gpqa import GpqaEvaluator, extract_answer, format_question
 
 ROWS = [
     {"Question": "2+2?", "Correct Answer": "4",

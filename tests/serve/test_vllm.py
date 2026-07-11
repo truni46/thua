@@ -1,7 +1,7 @@
 import yaml
-from thua.config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
-from thua.serve.vllm import VllmBackend
-from thua.serve.compose import to_compose_yaml
+from config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
+from serve.vllm import VllmBackend
+from serve.compose import to_compose_yaml
 
 
 def _backend():

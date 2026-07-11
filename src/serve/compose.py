@@ -1,5 +1,5 @@
 import yaml
-from thua.serve.base import ServeBackend
+from serve.base import ServeBackend
 
 
 def to_compose_yaml(backend: ServeBackend, image: str) -> str:
