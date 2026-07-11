@@ -220,3 +220,7 @@ __marimo__/
 # THUA project
 results/
 docker-compose.generated.yml
+
+# BTC-provided competition inputs (do not publish)
+trace-round1.jsonl
+docker-compose-baseline.yml
