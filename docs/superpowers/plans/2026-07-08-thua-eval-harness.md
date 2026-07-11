@@ -1,5 +1,12 @@
 # THUA Evaluation Harness Implementation Plan
 
+> **⚠️ Path note (post-implementation):** This plan was written against a `src/thua/` package
+> layout with a `trace/` module. The delivered code uses a **flat** layout under `src/`
+> (imports are bare, e.g. `from metrics.scoring import ...`, `from runner import ...`) and the
+> `trace/` module was renamed `tracing/` to avoid shadowing Python's stdlib `trace`. When
+> reading tasks below, mentally map `src/thua/X` → `src/X`, `from thua.X` → `from X`, and
+> `trace/` → `tracing/`. Everything else (steps, tests, code) is accurate.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the GPU-independent core of the THUA pipeline — config, scoring/accuracy metrics, trace replay, speed + GPQA evaluators, docker-compose generation, and a `main.py` CLI — so serving configs can be scored against any OpenAI-compatible endpoint.

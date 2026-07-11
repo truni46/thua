@@ -59,7 +59,7 @@ Serving runtime is **pluggable** (vLLM primary, SGLang secondary) via a `ServeBa
 | `metric.py` | `metrics/` | ERS + f(Δ) + server stats |
 | `scripts/` | `scripts/` | one-off tooling |
 | `main.py` | `main.py` | orchestrate per experiment config |
-| — | `serve/`, `trace/` | serving-specific additions |
+| — | `serve/`, `tracing/` | serving-specific additions |
 
 ### Folder structure
 
@@ -75,19 +75,25 @@ THUA/
 │   ├── benchmark/   trace_round1.yaml       # trace path, timeline, ERS constants
 │   ├── accuracy/    gpqa_diamond.yaml       # dataset, n, prompt template, baseline
 │   └── experiment/  exp_fp8.yaml            # composes serve+kvcache+scheduling+quant+bench+acc
-├── src/thua/
+├── src/                        # flat layout — no `thua.` package prefix
 │   ├── config/     schema.py (typed dataclasses) · loader.py (base+override merge)
-│   ├── model/      base.py(Quantizer ABC) · fp8.py · awq.py · gptq.py · online.py(no-op) · spec.py · registry.py
-│   ├── serve/      base.py(ServeBackend ABC) · vllm.py · sglang.py · compose.py · registry.py
-│   ├── trace/      loader.py(jsonl→Request) · client.py(async streaming) · replayer.py(honor timestamp_ms)
+│   ├── model/      base.py(Quantizer ABC) · fp8.py · registry.py   # awq/gptq/spec deferred
+│   ├── serve/      base.py(ServeBackend ABC) · vllm.py · compose.py · registry.py   # sglang deferred
+│   ├── tracing/    loader.py(jsonl→Request) · client.py(async streaming) · replayer.py(honor timestamp_ms)
 │   ├── metrics/    latency.py(TTFT/TPOT) · scoring.py(ERS) · accuracy.py(Δ,f(Δ),Score) · server_stats.py(/metrics)
-│   ├── evaluation/ base.py(Evaluator ABC) · speed.py · gpqa.py · report.py
-│   └── utils/      io.py · logging.py
-├── scripts/        quantize_model.py · gen_compose.py · run_speed.py · run_gpqa.py · sweep.py · build_and_push.sh
+│   ├── evaluation/ base.py(Evaluator ABC) · speed.py · gpqa.py · gpqa_data.py · chat.py · report.py
+│   ├── sweep.py    · runner.py
+├── scripts/        gen_compose.py · run_speed.py · sweep.py · build_and_push.sh
 ├── docker/         Dockerfile
 ├── results/        (gitignored)
 └── pyproject.toml
 ```
+
+> **Implementation note (as built on branch `trung`):** package layout is flat under
+> `src/` (imports are bare, e.g. `from metrics.scoring import ...`); the `trace/` module
+> was named `tracing/` to avoid shadowing Python's stdlib `trace`. Deferred by YAGNI:
+> `utils/`, SGLang backend, AWQ/GPTQ/self-spec quantizers, `configs/{kvcache,scheduling}/`
+> split (kvcache & scheduling live as groups inside experiment configs). 53 pytest tests pass.
 
 ### Key abstractions (OOP, pluggable)
 
@@ -144,7 +150,7 @@ main.py(exp.yaml)
   → (optional) model.Quantizer → /model checkpoint     # offline FP8/AWQ
   → serve.compose.gen → docker-compose.yml + Dockerfile # scaffold; no GPU locally
   → assume endpoint at base_url                          # docker compose up done manually on L4/MiG
-  → SpeedEvaluator: trace.replayer replays 120 req (async, honoring timestamp_ms, streaming)
+  → SpeedEvaluator: tracing.replayer replays 120 req (async, honoring timestamp_ms, streaming)
         → metrics.latency → metrics.scoring → ERS  (+ server_stats)
   → GpqaEvaluator: run GPQA Diamond (198 q) → metrics.accuracy → Δ, f(Δ)
   → evaluation.report: table + JSON, Score = 100·ERS·f(Δ)
