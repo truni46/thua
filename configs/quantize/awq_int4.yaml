@@ -1,0 +1,4 @@
+# Placeholder for AWQ INT4 (requires a calibration dataset; implement AwqQuantizer later).
+quant:
+  mode: offline
+  method: awq
