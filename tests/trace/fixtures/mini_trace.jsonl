@@ -1,0 +1,2 @@
+{"request_id": 2, "timestamp_ms": 50, "workload_type": "conversation", "body": {"model": "Qwen3.5-2B", "messages": [{"role": "user", "content": "hi"}], "max_tokens": 5, "temperature": 0, "seed": 42}}
+{"request_id": 0, "timestamp_ms": 0, "workload_type": "conversation", "body": {"model": "Qwen3.5-2B", "messages": [{"role": "user", "content": "hello"}], "max_tokens": 5, "temperature": 0, "seed": 42}}
