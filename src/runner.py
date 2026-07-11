@@ -12,11 +12,11 @@ from tracing.loader import load_trace
 from tracing.replayer import Replayer
 
 
-async def run_speed(cfg: ExperimentConfig) -> dict:
+async def run_speed(cfg: ExperimentConfig, on_result=None) -> dict:
     requests = load_trace(cfg.benchmark.trace_path)
     client = StreamingClient(cfg.benchmark.base_url, cfg.benchmark.model,
                              cfg.benchmark.timeout_s)
-    replayer = Replayer(client)
+    replayer = Replayer(client, on_result=on_result)
     evaluator = SpeedEvaluator(requests, replayer, ScoringConfig())
     return await evaluator.evaluate()
 

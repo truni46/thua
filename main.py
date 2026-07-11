@@ -16,6 +16,8 @@ def _parse():
     sp = sub.add_parser("speed", help="replay trace and report ERS")
     sp.add_argument("--config", required=True)
     sp.add_argument("--base-config", default="configs/base.yaml")
+    sp.add_argument("--verbose", action="store_true",
+                    help="print each request as it completes")
     gc = sub.add_parser("compose", help="generate docker-compose.yml")
     gc.add_argument("--config", required=True)
     gc.add_argument("--base-config", default="configs/base.yaml")
@@ -30,11 +32,30 @@ def _parse():
     return p.parse_args()
 
 
+def _make_progress():
+    """Return an on_result callback that prints each request as it completes."""
+    state = {"done": 0, "ok": 0}
+
+    def _on_result(idx, req, result):
+        state["done"] += 1
+        if result.success:
+            state["ok"] += 1
+        ttft = result.token_times_ms[0] if result.token_times_ms else None
+        ttft_s = f"{ttft:7.1f}ms" if ttft is not None else "   --   "
+        tag = "ok " if result.success else "FAIL"
+        print(f"[{state['done']:3d} done | {state['ok']:3d} ok] "
+              f"req#{req.request_id:<4d} {tag} ttft={ttft_s} ntok={len(result.token_times_ms)}",
+              flush=True)
+
+    return _on_result
+
+
 def main():
     args = _parse()
     cfg = load_experiment(args.config, base_path=args.base_config)
     if args.cmd == "speed":
-        result = asyncio.run(run_speed(cfg))
+        on_result = _make_progress() if args.verbose else None
+        result = asyncio.run(run_speed(cfg, on_result=on_result))
         print(format_speed_report(result))
     elif args.cmd == "compose":
         yaml_text = gen_compose(cfg, image=args.image)

@@ -28,6 +28,19 @@ async def test_replay_returns_input_order():
 
 
 @pytest.mark.asyncio
+async def test_replay_invokes_on_result_per_request():
+    reqs = [
+        Request(0, 0, {"messages": [{"role": "user", "content": "a"}]}),
+        Request(1, 0, {"messages": [{"role": "user", "content": "b"}]}),
+    ]
+    seen = []
+    def cb(idx, req, result):
+        seen.append((idx, req.request_id, result.success))
+    await Replayer(FakeClient(), time_scale=0.0, on_result=cb).run(reqs)
+    assert sorted(seen) == [(0, 0, True), (1, 1, True)]
+
+
+@pytest.mark.asyncio
 async def test_replay_dispatches_by_timestamp_order():
     # Later-timestamp request scheduled later -> dispatched second even if listed first.
     reqs = [
