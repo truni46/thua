@@ -3,9 +3,9 @@ from evaluation.speed import SpeedEvaluator
 from metrics.scoring import ScoringConfig
 from serve.compose import to_compose_yaml
 from serve.registry import get_backend
-from trace.client import StreamingClient
-from trace.loader import load_trace
-from trace.replayer import Replayer
+from tracing.client import StreamingClient
+from tracing.loader import load_trace
+from tracing.replayer import Replayer
 
 
 async def run_speed(cfg: ExperimentConfig) -> dict:

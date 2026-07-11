@@ -1,7 +1,7 @@
 import pytest
-from trace.loader import Request
-from trace.client import StreamResult
-from trace.replayer import Replayer, ReplayItem
+from tracing.loader import Request
+from tracing.client import StreamResult
+from tracing.replayer import Replayer, ReplayItem
 
 
 class FakeClient:

@@ -1,7 +1,7 @@
 import pytest
-from trace.loader import Request
-from trace.client import StreamResult
-from trace.replayer import Replayer
+from tracing.loader import Request
+from tracing.client import StreamResult
+from tracing.replayer import Replayer
 from metrics.scoring import ScoringConfig
 from evaluation.speed import SpeedEvaluator
 

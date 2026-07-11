@@ -2,8 +2,8 @@ import asyncio
 import time
 from dataclasses import dataclass
 
-from trace.client import StreamResult
-from trace.loader import Request
+from tracing.client import StreamResult
+from tracing.loader import Request
 
 
 @dataclass
