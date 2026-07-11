@@ -1,0 +1,4 @@
+grid:
+  scheduling.max_num_batched_tokens: [4096, 8192, 16384]
+  kvcache.kv_cache_dtype: [auto, fp8_e4m3]
+  scheduling.scheduling_policy: [fcfs, priority]
