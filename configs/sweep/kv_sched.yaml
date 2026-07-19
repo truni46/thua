@@ -1,0 +1,4 @@
+grid:
+  scheduling.max_num_batched_tokens: [2048, 4096, 8192]
+  scheduling.max_num_seqs: [8, 16, 32]
+  benchmark.prefix_share: [0.0, 0.95]

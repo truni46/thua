@@ -1,0 +1,10 @@
+{
+  "num_conversations": 2,
+  "user_turns_per_conversation": 2,
+  "total_requests": 4,
+  "shared_system_prefix_tokens": 5,
+  "per_conversation_prefix_tokens": 5,
+  "new_user_tokens_per_turn": 3,
+  "output_tokens_per_turn_pinned": 4,
+  "arrival": "Poisson, seed 42"
+}

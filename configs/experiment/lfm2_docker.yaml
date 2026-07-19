@@ -1,0 +1,7 @@
+name: lfm2_docker
+benchmark:
+  trace_path: /harness/trace_grading_public.jsonl
+  spec_path: /harness/grading-workload-spec.json
+  base_url: http://model:8000/v1
+accuracy:
+  base_url: http://model:8000/v1

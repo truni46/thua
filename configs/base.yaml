@@ -1,0 +1,36 @@
+serve:
+  backend: vllm
+  model_path: /model
+  served_model_name: LFM2.5-1.2B-Instruct
+  host: 0.0.0.0
+  port: 8000
+  max_model_len: 6144
+  gpu_memory_utilization: 0.95
+  dtype: bfloat16
+  extra_args: {}
+kvcache:
+  enable_prefix_caching: true
+  kv_cache_dtype: auto
+  block_size: null
+scheduling:
+  enable_chunked_prefill: true
+  max_num_batched_tokens: 4096
+  long_prefill_token_threshold: 0
+  max_num_seqs: 16
+  max_num_partial_prefills: 1
+  scheduling_policy: fcfs
+  disable_log_requests: true
+benchmark:
+  trace_path: trace_grading_public.jsonl
+  spec_path: grading-workload-spec.json
+  base_url: http://localhost:8000/v1
+  model: LFM2.5-1.2B-Instruct
+  timeout_s: 60
+accuracy:
+  dataset: Idavidrein/gpqa
+  subset: gpqa_diamond
+  n: 198
+  baseline: 0.4
+  base_url: http://localhost:8000/v1
+  model: LFM2.5-1.2B-Instruct
+  timeout_s: 120
