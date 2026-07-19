@@ -2,7 +2,7 @@ import copy
 import yaml
 
 from config.schema import (
-    ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig,
+    ServeConfig, KVCacheConfig, SchedulingConfig,
     BenchmarkConfig, AccuracyConfig, ExperimentConfig,
 )
 
@@ -29,7 +29,6 @@ def load_experiment(path: str, base_path: str = "configs/base.yaml") -> Experime
         serve=ServeConfig(**merged.get("serve", {})),
         kvcache=KVCacheConfig(**merged.get("kvcache", {})),
         scheduling=SchedulingConfig(**merged.get("scheduling", {})),
-        quant=QuantConfig(**merged.get("quant", {})),
         benchmark=BenchmarkConfig(**merged.get("benchmark", {})),
         accuracy=AccuracyConfig(**merged.get("accuracy", {})),
     )

@@ -1,2 +1,4 @@
-{"request_id": 2, "timestamp_ms": 50, "workload_type": "conversation", "body": {"model": "Qwen3.5-2B", "messages": [{"role": "user", "content": "hi"}], "max_tokens": 5, "temperature": 0, "seed": 42}}
-{"request_id": 0, "timestamp_ms": 0, "workload_type": "conversation", "body": {"model": "Qwen3.5-2B", "messages": [{"role": "user", "content": "hello"}], "max_tokens": 5, "temperature": 0, "seed": 42}}
+{"conv_id": 0, "turn_idx": 0, "in_warmup": true, "timestamp_ms": 0, "think_ms": 100, "in_chars": 300, "in_tokens_est": 100, "out_tokens_max": 5}
+{"conv_id": 0, "turn_idx": 1, "in_warmup": true, "timestamp_ms": 0, "think_ms": 100, "in_chars": 300, "in_tokens_est": 100, "out_tokens_max": 5}
+{"conv_id": 1, "turn_idx": 0, "in_warmup": false, "timestamp_ms": 50, "think_ms": 100, "in_chars": 300, "in_tokens_est": 100, "out_tokens_max": 5}
+{"conv_id": 1, "turn_idx": 1, "in_warmup": false, "timestamp_ms": 50, "think_ms": 100, "in_chars": 300, "in_tokens_est": 100, "out_tokens_max": 5}

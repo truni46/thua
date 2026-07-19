@@ -1,4 +1,4 @@
-from metrics.server_stats import parse_metrics
+from metrics import parse_metrics
 
 SAMPLE = """# HELP vllm:gpu_prefix_cache_hit_rate ...
 # TYPE vllm:gpu_prefix_cache_hit_rate gauge

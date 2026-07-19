@@ -1,3 +1,0 @@
-quant:
-  mode: offline
-  method: fp8

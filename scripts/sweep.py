@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import yaml  # noqa: E402
 from config.loader import load_experiment  # noqa: E402
 from config.schema import (ServeConfig, KVCacheConfig, SchedulingConfig,  # noqa: E402
-                           QuantConfig, BenchmarkConfig, AccuracyConfig, ExperimentConfig)
+                           BenchmarkConfig, AccuracyConfig, ExperimentConfig)
 from sweep import expand_grid, apply_overrides  # noqa: E402
 from runner import run_speed  # noqa: E402
 
@@ -25,7 +25,6 @@ def _to_cfg(merged: dict) -> ExperimentConfig:
         serve=ServeConfig(**merged.get("serve", {})),
         kvcache=KVCacheConfig(**merged.get("kvcache", {})),
         scheduling=SchedulingConfig(**merged.get("scheduling", {})),
-        quant=QuantConfig(**merged.get("quant", {})),
         benchmark=BenchmarkConfig(**merged.get("benchmark", {})),
         accuracy=AccuracyConfig(**merged.get("accuracy", {})),
     )
@@ -41,7 +40,7 @@ async def _main():
     base_cfg = load_experiment(args.config, base_path=args.base_config)
     base_dict = {
         "name": base_cfg.name, "serve": vars(base_cfg.serve), "kvcache": vars(base_cfg.kvcache),
-        "scheduling": vars(base_cfg.scheduling), "quant": vars(base_cfg.quant),
+        "scheduling": vars(base_cfg.scheduling),
         "benchmark": vars(base_cfg.benchmark), "accuracy": vars(base_cfg.accuracy),
     }
     with open(args.grid, encoding="utf-8") as fh:

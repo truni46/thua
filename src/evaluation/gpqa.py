@@ -1,6 +1,6 @@
 import re
 
-from metrics.accuracy import delta
+from metrics import delta
 
 _TMPL = (
     "Answer the following multiple choice question. "

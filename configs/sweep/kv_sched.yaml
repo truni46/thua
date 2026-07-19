@@ -1,4 +1,4 @@
 grid:
-  scheduling.max_num_batched_tokens: [4096, 8192, 16384]
-  kvcache.kv_cache_dtype: [auto, fp8_e4m3]
-  scheduling.scheduling_policy: [fcfs, priority]
+  scheduling.max_num_batched_tokens: [2048, 4096, 8192]
+  scheduling.max_num_seqs: [8, 16, 32]
+  benchmark.prefix_share: [0.0, 0.95]

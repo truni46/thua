@@ -1,5 +1,5 @@
 import math
-from metrics.accuracy import delta, penalty, final_score, DEFAULT_BASELINE
+from metrics import delta, penalty, final_score, DEFAULT_BASELINE
 
 
 def test_default_baseline():

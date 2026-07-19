@@ -1,0 +1,6 @@
+# Keep the bench build context tiny regardless of what else is in the repo
+# (no model weights, no trace, no venv). Per-Dockerfile ignore (BuildKit).
+*
+!main.py
+!src
+!configs

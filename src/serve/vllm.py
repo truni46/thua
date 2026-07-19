@@ -1,4 +1,4 @@
-from config.schema import ServeConfig, KVCacheConfig, SchedulingConfig, QuantConfig
+from config.schema import ServeConfig, KVCacheConfig, SchedulingConfig
 from serve.base import ServeBackend
 
 ENTRYPOINT = ["python3", "-m", "vllm.entrypoints.openai.api_server"]
@@ -6,11 +6,10 @@ ENTRYPOINT = ["python3", "-m", "vllm.entrypoints.openai.api_server"]
 
 class VllmBackend(ServeBackend):
     def __init__(self, serve: ServeConfig, kvcache: KVCacheConfig,
-                 scheduling: SchedulingConfig, quant: QuantConfig):
+                 scheduling: SchedulingConfig):
         self.serve = serve
         self.kvcache = kvcache
         self.scheduling = scheduling
-        self.quant = quant
 
     def build_args(self) -> list[str]:
         s = self.serve
@@ -23,9 +22,10 @@ class VllmBackend(ServeBackend):
             f"--gpu-memory-utilization={s.gpu_memory_utilization}",
             "--tensor-parallel-size=1",
         ]
+        if s.dtype and s.dtype != "auto":
+            args.append(f"--dtype={s.dtype}")
         args += self._kvcache_args()
         args += self._scheduling_args()
-        args += self._quant_args()
         for k, v in s.extra_args.items():
             args.append(f"--{k}={v}" if v is not None else f"--{k}")
         return args
@@ -37,9 +37,8 @@ class VllmBackend(ServeBackend):
             out.append("--enable-prefix-caching")
         if kv.kv_cache_dtype and kv.kv_cache_dtype != "auto":
             out.append(f"--kv-cache-dtype={kv.kv_cache_dtype}")
-        out.append(f"--block-size={kv.block_size}")
-        if kv.cpu_offload_gb and kv.cpu_offload_gb > 0:
-            out.append(f"--cpu-offload-gb={kv.cpu_offload_gb}")
+        if kv.block_size:
+            out.append(f"--block-size={kv.block_size}")
         return out
 
     def _scheduling_args(self) -> list[str]:
@@ -54,13 +53,9 @@ class VllmBackend(ServeBackend):
         if sc.max_num_partial_prefills > 1:
             out.append(f"--max-num-partial-prefills={sc.max_num_partial_prefills}")
         out.append(f"--scheduling-policy={sc.scheduling_policy}")
-        out.append(f"--preemption-mode={sc.preemption_mode}")
+        if sc.disable_log_requests:
+            out.append("--no-enable-log-requests")
         return out
-
-    def _quant_args(self) -> list[str]:
-        if self.quant.mode == "online" and self.quant.method not in ("none", None):
-            return [f"--quantization={self.quant.method}"]
-        return []
 
     def compose_service(self) -> dict:
         port = self.serve.port

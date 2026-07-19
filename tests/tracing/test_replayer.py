@@ -1,7 +1,13 @@
 import pytest
-from tracing.loader import Request
+from tracing.loader import Turn
 from tracing.client import StreamResult
 from tracing.replayer import Replayer, ReplayItem
+
+
+def _turn(rid, cid, tidx, ts, content, warmup=False, think=0):
+    return Turn(request_id=rid, conv_id=cid, turn_idx=tidx, in_warmup=warmup,
+                timestamp_ms=ts, think_ms=think,
+                body={"messages": [{"role": "user", "content": content}]})
 
 
 class FakeClient:
@@ -9,44 +15,35 @@ class FakeClient:
         self.order = []
 
     async def stream(self, body):
-        self.order.append(body["messages"][0]["content"])
+        self.order.append(body["messages"][-1]["content"])
         return StreamResult(token_times_ms=[10.0, 20.0], text="ok", success=True)
 
 
 @pytest.mark.asyncio
 async def test_replay_returns_input_order():
-    reqs = [
-        Request(0, 0, {"messages": [{"role": "user", "content": "a"}]}),
-        Request(1, 20, {"messages": [{"role": "user", "content": "b"}]}),
-    ]
-    client = FakeClient()
-    # time_scale=0 -> no real waiting
-    items = await Replayer(client, time_scale=0.0).run(reqs)
-    assert [it.request.request_id for it in items] == [0, 1]
+    turns = [_turn(0, 0, 0, 0, "a"), _turn(1, 1, 0, 0, "b")]
+    items = await Replayer(FakeClient(), time_scale=0.0).run(turns)
+    assert [it.turn.request_id for it in items] == [0, 1]
     assert all(isinstance(it, ReplayItem) for it in items)
     assert items[0].result.success is True
 
 
 @pytest.mark.asyncio
-async def test_replay_invokes_on_result_per_request():
-    reqs = [
-        Request(0, 0, {"messages": [{"role": "user", "content": "a"}]}),
-        Request(1, 0, {"messages": [{"role": "user", "content": "b"}]}),
-    ]
-    seen = []
-    def cb(idx, req, result):
-        seen.append((idx, req.request_id, result.success))
-    await Replayer(FakeClient(), time_scale=0.0, on_result=cb).run(reqs)
-    assert sorted(seen) == [(0, 0, True), (1, 1, True)]
+async def test_replay_serializes_turns_within_conversation():
+    turns = [_turn(1, 0, 1, 0, "second", think=0),
+             _turn(0, 0, 0, 0, "first", think=0)]
+    client = FakeClient()
+    await Replayer(client, time_scale=0.0).run(turns)
+    assert client.order == ["first", "second"]
 
 
 @pytest.mark.asyncio
-async def test_replay_dispatches_by_timestamp_order():
-    # Later-timestamp request scheduled later -> dispatched second even if listed first.
-    reqs = [
-        Request(1, 100, {"messages": [{"role": "user", "content": "late"}]}),
-        Request(0, 0, {"messages": [{"role": "user", "content": "early"}]}),
-    ]
-    client = FakeClient()
-    await Replayer(client, time_scale=0.001).run(reqs)  # 100ms -> 0.1ms scaled
-    assert client.order[0] == "early"
+async def test_replay_invokes_on_result_per_turn():
+    turns = [_turn(0, 0, 0, 0, "a"), _turn(1, 1, 0, 0, "b")]
+    seen = []
+
+    def cb(rid, turn, result):
+        seen.append((rid, turn.conv_id, result.success))
+
+    await Replayer(FakeClient(), time_scale=0.0, on_result=cb).run(turns)
+    assert sorted(seen) == [(0, 0, True), (1, 1, True)]

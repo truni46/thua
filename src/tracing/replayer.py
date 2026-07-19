@@ -3,12 +3,12 @@ import time
 from dataclasses import dataclass
 
 from tracing.client import StreamResult
-from tracing.loader import Request
+from tracing.loader import Turn
 
 
 @dataclass
 class ReplayItem:
-    request: Request
+    turn: Turn
     result: StreamResult
 
 
@@ -21,17 +21,25 @@ class Replayer:
         self.time_scale = time_scale
         self.on_result = on_result
 
-    async def run(self, requests: list[Request]) -> list[ReplayItem]:
-        results: list[StreamResult | None] = [None] * len(requests)
+    async def run(self, turns: list[Turn]) -> list[ReplayItem]:
+        results: dict[int, StreamResult] = {}
+        convs: dict[int, list[Turn]] = {}
+        for t in turns:
+            convs.setdefault(t.conv_id, []).append(t)
+        for seq in convs.values():
+            seq.sort(key=lambda t: t.turn_idx)
 
-        async def _one(idx: int, req: Request):
-            delay = (req.timestamp_ms / 1000.0) * self.time_scale
-            if delay > 0:
-                await self.sleep(delay)
-            result = await self.client.stream(req.body)
-            results[idx] = result
-            if self.on_result is not None:
-                self.on_result(idx, req, result)
+        async def run_conv(seq: list[Turn]):
+            start_delay = (seq[0].timestamp_ms / 1000.0) * self.time_scale
+            if start_delay > 0:
+                await self.sleep(start_delay)
+            for i, t in enumerate(seq):
+                res = await self.client.stream(t.body)
+                results[t.request_id] = res
+                if self.on_result is not None:
+                    self.on_result(t.request_id, t, res)
+                if i < len(seq) - 1 and t.think_ms > 0:
+                    await self.sleep((t.think_ms / 1000.0) * self.time_scale)
 
-        await asyncio.gather(*(_one(i, r) for i, r in enumerate(requests)))
-        return [ReplayItem(req, res) for req, res in zip(requests, results)]
+        await asyncio.gather(*(run_conv(seq) for seq in convs.values()))
+        return [ReplayItem(t, results[t.request_id]) for t in turns]
